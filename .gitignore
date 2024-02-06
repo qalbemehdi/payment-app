@@ -1,0 +1,15 @@
+node_modules/
+.env
+.env.development.local
+.env.test.local
+.env.production.local
+.env.local
+
+# Visual Studio Code
+.vscode/
+
+# Operating System Files
+.idea/
+
+# Ignore build files
+build/
