@@ -1,5 +1,5 @@
 
-export const getUserDetail=(req,res)=>{
-        console.log("user detail");
-        res.send("Hello World")
+export const registerUser=(req,res)=>{
+        const{name,email,password}=req.body
+       console.log(name);
 }
