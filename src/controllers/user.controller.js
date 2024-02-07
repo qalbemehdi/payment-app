@@ -60,3 +60,18 @@ if (!(await user.isPasswordCorrect(password))) {
     message:"user logged in successfully"
   })
 })
+
+export const logoutUser=asyncHandler(async(req,res)=>{
+   
+  const user=await User.findByIdAndUpdate(req.user._id,
+    {$unset:{refreshToken:1}})
+    const options={
+      httpOnly:true,
+      secure:true
+    }
+  
+  return res.status(200)
+  .clearCookie("accessToken",options)
+  .clearCookie("refreshToken",options)
+  .json({message:"user logged out successfully"})
+})
