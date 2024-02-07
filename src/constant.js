@@ -1,2 +1,2 @@
-tAeaCKCCouaDzxaY
-qalberizvi786
+export const dbName="paymentDB"
+const dblastline="/?retryWrites=true&w=majority"
