@@ -3,6 +3,7 @@ import ApiError from "../utils/apiError.js";
 import ApiResponse from "../utils/apiResponse.js";
 import asyncHandler from "../utils/asyncHandler.js";
 import { userValidation } from "../utils/zod.validation.js";
+import { generateTokens } from "../utils/tokenGenerator.js";
 
 export const registerUser = asyncHandler(async (req, res) => {
   const { name, email, password } = req.body;
@@ -32,3 +33,30 @@ export const registerUser = asyncHandler(async (req, res) => {
     "user created successfully"
   );
 });
+
+export const loginUser = asyncHandler(async(req,res)=>{
+  let {email,password}=req.body;
+     userValidation.parse({...req.body,name:"abc"})
+const user=await User.findOne({email:email})
+  
+if (!user) {
+  throw new ApiError(404, 'User not found with this email');
+}
+if (!(await user.isPasswordCorrect(password))) {
+  throw new ApiError(401, 'Incorrect password');
+}
+
+  const {accessToken,refreshToken}= await generateTokens(user)
+
+  const options = {
+    httpOnly: true,
+    secure: true,
+  };
+  return res.status(200)
+  .cookie("accessToken",accessToken,options)
+  .cookie("refreshToken",refreshToken,options)
+  .json({
+    data:{accessToken,refreshToken},
+    message:"user logged in successfully"
+  })
+})
