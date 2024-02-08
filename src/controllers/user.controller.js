@@ -4,6 +4,7 @@ import ApiResponse from "../utils/apiResponse.js";
 import asyncHandler from "../utils/asyncHandler.js";
 import { userValidation } from "../utils/zod.validation.js";
 import { generateTokens } from "../utils/tokenGenerator.js";
+import { Account } from "../models/account.model.js";
 
 export const registerUser = asyncHandler(async (req, res) => {
   const { name, email, password } = req.body;
@@ -23,6 +24,11 @@ export const registerUser = asyncHandler(async (req, res) => {
   });
 
   if (!user) throw new ApiError(500, "Server error: Unable to signup");
+
+  await Account.create({
+    userId:user._id,
+   balance:Math.round(1+Math.random()*100000)}
+  )
   return ApiResponse.send(
     res,
     200,
@@ -75,3 +81,23 @@ export const logoutUser=asyncHandler(async(req,res)=>{
   .clearCookie("refreshToken",options)
   .json({message:"user logged out successfully"})
 })
+
+export const getUser=asyncHandler(async(req,res)=>{
+      const{filter}=req.query
+      if(!filter)
+       return  ApiResponse.send(res,200,"not found")
+
+  const regex = new RegExp(`^${filter}`, 'i');
+
+  const users = await User.find({ name: { $regex: regex } }).sort({"name":1})
+   
+    if(users.length==0)
+     return  ApiResponse.send(res,200,null,"no user found")
+
+     const t=await User.collection.getIndexes();
+   
+  return ApiResponse.send(res, 200, users, "Users fetched successfully");
+})
+
+
+

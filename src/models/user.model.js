@@ -51,5 +51,5 @@ userSchema.methods.generateRefreshToken= function(){
       },process.env.REFRESH_TOKEN_KEY,{expiresIn:process.env.REFRESH_EXPIRES})
   }
   
-
+  userSchema.index({ name: 1 });
 export const User=mongoose.models.User||mongoose.model("User",userSchema)
