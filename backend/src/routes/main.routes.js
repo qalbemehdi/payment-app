@@ -1,7 +1,9 @@
-import app from "../app.js"
+import { Router } from "express"
 import userRouter from "./user.routes.js"
+import accountRouter from "./account.routes.js"
+const router=Router();
 
- const subRoute=()=>{
-    app.use('/user',userRouter)
-}
-export default subRoute;
+router.use('/user',userRouter)
+router.use('/account',accountRouter)
+
+export default router;

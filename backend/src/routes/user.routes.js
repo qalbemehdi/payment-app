@@ -1,10 +1,11 @@
 import { Router } from "express";
-import { getUser, loginUser, logoutUser, registerUser } from "../controllers/user.controller.js";
+import { getUser, loginUser, logoutUser, registerUser, userDetails } from "../controllers/user.controller.js";
 import { verifyJWT } from "../middleware/auth.middleware.js";
 import { addSampleData } from "../controllers/test.controller.js";
 
 const router=Router();
 // router.route("/:userId").get("getUserDetail")
+router.route("/").get(verifyJWT,userDetails)
 router.route("/signup").post(registerUser)
 router.route("/login").post(loginUser)
 router.route("/logout").post(verifyJWT,logoutUser)

@@ -89,7 +89,7 @@ export const getUser=asyncHandler(async(req,res)=>{
 
   const regex = new RegExp(`^${filter}`, 'i');
 
-  const users = await User.find({ name: { $regex: regex } }).sort({"name":1})
+  const users = await User.find({ name: { $regex: regex } },{name:1,email:1}).sort({"name":1})
    
     if(users.length==0)
      return  ApiResponse.send(res,200,null,"no user found")
@@ -97,6 +97,12 @@ export const getUser=asyncHandler(async(req,res)=>{
      const t=await User.collection.getIndexes();
    
   return ApiResponse.send(res, 200, users, "Users fetched successfully");
+})
+
+export const userDetails=asyncHandler(async(req,res)=>{
+  const user=await User.findById({_id:req.user?._id},{name:1,email:1})
+
+  return ApiResponse.send(res,200,user,"user fetched successfully")
 })
 
 
