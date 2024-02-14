@@ -89,7 +89,7 @@ export const getUser=asyncHandler(async(req,res)=>{
 
   const regex = new RegExp(`^${filter}`, 'i');
 
-  const users = await User.find({ name: { $regex: regex } },{name:1,email:1}).sort({"name":1})
+  const users = await User.find({ _id:{$ne:req.user._id},name: { $regex: regex } },{name:1,email:1}).sort({"name":1})
    
     if(users.length==0)
      return  ApiResponse.send(res,200,null,"no user found")

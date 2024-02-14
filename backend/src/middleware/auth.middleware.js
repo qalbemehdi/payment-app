@@ -4,7 +4,6 @@ import asyncHandler from "../utils/asyncHandler.js";
 import jwt from "jsonwebtoken";
 import { generateTokens } from "../utils/tokenGenerator.js";
 export const verifyJWT = asyncHandler(async (req, res, next) => {
-  console.log(req.cookies);
   const { accessToken, refreshToken } = req.cookies;
   let user = null;
   if (
@@ -13,8 +12,9 @@ export const verifyJWT = asyncHandler(async (req, res, next) => {
       return err ? true : false;
     })
   ) {
+    
     if (refreshToken) {
-       jwt.verify(
+      await jwt.verify(
         refreshToken,
         process.env.REFRESH_TOKEN_KEY,
         async (err, decoded) => {
@@ -24,6 +24,7 @@ export const verifyJWT = asyncHandler(async (req, res, next) => {
             user = await User.findById({ _id: decoded._id }).select(
               "-password -refreshToken"
             );
+            
           }
         }
       );
@@ -43,5 +44,6 @@ export const verifyJWT = asyncHandler(async (req, res, next) => {
     throw new ApiError(500, "something wrong happened please login again");
 
   req.user = user;
+ 
   next();
 });

@@ -6,6 +6,7 @@ const app=express();
 app.use(cors({
     origin: 'http://localhost:5173',
     credentials: true, // Allow credentials (cookies)
+    methods: ['GET', 'POST', 'PATCH']
   }));
 app.use(express.json({limit:"16kb"}))
 app.use(cookieParser())
