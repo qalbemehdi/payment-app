@@ -15,7 +15,6 @@ export const getUserAccount=asyncHandler(async(req,res)=>{
 
 export const transferMoney=asyncHandler(async(req,res)=>{
     const {to,amount}=req.query;
-    console.log(amount);
     const senderAccount=await Account.findOne({userId:req.user?._id})
     if(senderAccount.balance<=amount)
     throw new ApiError(400,"insufficient balance")
