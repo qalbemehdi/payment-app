@@ -18,9 +18,16 @@ const userSchema=Schema({
     avatar:{
         type:String
     },
+    color:{
+        type:String
+    },
     password:{
        type:String,
        required:true
+    },
+    account:{
+        type:mongoose.Schema.Types.ObjectId,
+        ref:"Account"
     },
     refreshToken:{
         type:String

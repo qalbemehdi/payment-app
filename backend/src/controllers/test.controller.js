@@ -37,7 +37,17 @@ export const addSampleData = asyncHandler(async (req, res) => {
    for (const user of users) {
       usersAccount.push({userId:user._id,balance:Math.round(1+Math.random()*100000)})
    }
-   const account=await Account.insertMany(usersAccount);
+   const accounts=await Account.insertMany(usersAccount);
+
+   for (const account of accounts) {
+    const userToUpdate = users.find((user) => user._id.toString() === account.userId.toString());
+  
+    if (userToUpdate) {
+      // Update the user document with the account information
+      userToUpdate.account = account._id; // Assuming you have a field named 'accountId'
+      await userToUpdate.save({validateBeforeSave:false});
+    }
+  }
   
     return ApiResponse.send(
       res,

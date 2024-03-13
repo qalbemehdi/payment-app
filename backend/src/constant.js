@@ -416,4 +416,54 @@ export const sampleData = [
     password: "AnayaY@7890",
     email: "anaya.yadav@example.com",
   },
-];
+].map((user)=>({...user,
+  color: generateUserColor(user.email, user.name),
+}))
+
+export function generateUserColor(userId, userName) {
+  const hash = userId
+    ?.split("")
+    .reduce((acc, char) => char.charCodeAt(0) + acc, 0);
+  const nameHash = userName
+    ?.split("")
+    .reduce((acc, char) => char.charCodeAt(0) + acc, 0);
+  const combinedHash = hash + nameHash;
+  const hue = combinedHash % 360; // Use the combined hash value to determine the hue
+
+  // Generate a random alpha value between 0.5 and 1
+  const randomAlpha = Math.random() * 0.5 + 0.1;
+
+  return hslToRgba(hue, 70, 50, randomAlpha);
+}
+function hslToRgba(h, s, l, a) {
+  // Ensure the input values are within valid ranges
+  h = ((h % 360) + 360) % 360; // Clamp hue to [0, 360)
+  s = Math.max(0, Math.min(100, s)); // Clamp saturation to [0, 100]
+  l = Math.max(0, Math.min(100, l)); // Clamp lightness to [0, 100]
+  a = Math.max(0, Math.min(1, a)); // Clamp alpha to [0, 1]
+
+  // Convert HSL to RGB
+  const c = ((1 - Math.abs(2 * l - 1)) * s) / 100;
+  const x = c * (1 - Math.abs(((h / 60) % 2) - 1));
+  const m = l / 100 - c / 2;
+
+  let r, g, b;
+  if (0 <= h && h < 60) {
+    [r, g, b] = [c, x, 0];
+  } else if (60 <= h && h < 120) {
+    [r, g, b] = [x, c, 0];
+  } else if (120 <= h && h < 180) {
+    [r, g, b] = [0, c, x];
+  } else if (180 <= h && h < 240) {
+    [r, g, b] = [0, x, c];
+  } else if (240 <= h && h < 300) {
+    [r, g, b] = [x, 0, c];
+  } else {
+    [r, g, b] = [c, 0, x];
+  }
+
+  // Convert RGB to integer values (0-255) and return as RGBA
+  return `rgba(${Math.round((r + m) * 255)}, ${Math.round(
+    (g + m) * 255
+  )}, ${Math.round((b + m) * 255)}, ${a})`;
+}
