@@ -14,7 +14,14 @@ const transactionSchema=new mongoose.Schema({
     moneySent:{
          type:Number,
          required:true
-    }
-
+    },
+    
+        paymentStatus:{
+            type:String,
+            enum:['pending','completed','failed'],
+            default:'pending'
+        }
+    
+    
 },{timestamps:true})
 export const Transaction=mongoose.models.Transaction||mongoose.model("Transaction",transactionSchema)
